@@ -42,7 +42,6 @@ const unsigned int SCR_WIDTH = 1200;
 const unsigned int SCR_HEIGHT = 900;
 
 // camera
-
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -119,7 +118,6 @@ void DrawImGui(ProgramState *programState);
 
 int main() {
     // glfw: initialize and configure
-    // ------------------------------
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -130,7 +128,6 @@ int main() {
 #endif
 
     // glfw window creation
-    // --------------------
     GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -146,7 +143,6 @@ int main() {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // glad: load all OpenGL function pointers
-    // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
@@ -160,6 +156,7 @@ int main() {
     if (programState->ImGuiEnabled) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
+
     // Init Imgui
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -172,11 +169,9 @@ int main() {
     ImGui_ImplOpenGL3_Init("#version 330 core");
 
     // configure global opengl state
-    // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
     // build and compile shaders
-    // -------------------------
     Shader ourShader("resources/shaders/2.model_lighting.vs", "resources/shaders/2.model_lighting.fs");
 
     Shader skyboxShader("resources/shaders/skybox.vs", "resources/shaders/skybox.fs");
@@ -234,7 +229,6 @@ int main() {
     }
 
     // load models
-    // -----------
     Model island1("resources/objects/island/untitled.obj");
     island1.SetShaderTextureNamePrefix("material.");
     Model island2("resources/objects/island/untitled.obj");
@@ -424,7 +418,7 @@ int main() {
         island3.Draw(ourShader);
 
 
-        // skybox uvek na kraju
+        // skybox always goes last
         glDepthFunc(GL_LEQUAL);
         skyboxShader.use();
         model = glm::mat4(1.0f);
@@ -442,8 +436,7 @@ int main() {
         glBindVertexArray(0);
         glDepthFunc(GL_LESS); //depth function back to normal state.
 
-        //loading
-        //pingpong
+        //loading pingpong
         bool horizontal = true, first_iteration = true;
         unsigned int amount = 10;
         bloomShader.use();
@@ -478,7 +471,6 @@ int main() {
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -489,7 +481,6 @@ int main() {
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
     // glfw: terminate, clearing all previously allocated GLFW resources.
-    // ------------------------------------------------------------------
     glfwTerminate();
     return 0;
 }
@@ -524,7 +515,6 @@ void renderQuad()
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-// ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
@@ -566,7 +556,6 @@ void processInput(GLFWwindow *window) {
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
@@ -574,7 +563,6 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
 }
 
 // glfw: whenever the mouse moves, this callback is called
-// -------------------------------------------------------
 void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
     if (firstMouse) {
         lastX = xpos;
@@ -593,7 +581,6 @@ void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
-// ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
     programState->camera.ProcessMouseScroll(yoffset);
 }

@@ -313,6 +313,12 @@ int main() {
         ourShader.setMat4("model", model);
         island1.Draw(ourShader);
 
+        model=glm::mat4(1.0f);
+        model=glm::translate(model, glm::vec3(40.0f, 17.00f + 1.2f*sin(glfwGetTime()), -0.00f));
+        model=glm::scale(model, glm::vec3(0.02, 0.02, 0.02));
+        ourShader.setMat4("model", model);
+        island2.Draw(ourShader);
+
         // skybox uvek na kraju
         glDepthFunc(GL_LEQUAL);
         skyboxShader.use();

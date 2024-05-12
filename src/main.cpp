@@ -54,7 +54,7 @@ float lastFrame = 0.0f;
 struct PointLight {
     glm::vec3 position;
     glm::vec3 ambient;
-    glm::vec3 diffuse;
+    glm::vec3 diffuse ;
     glm::vec3 specular;
 
     float constant;
@@ -244,14 +244,13 @@ int main() {
 
     PointLight& pointLight = programState->pointLight;
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
-    // bilo je svuda 0.1
-    pointLight.ambient = glm::vec3(0.6, 0.6, 0.6);
-    pointLight.diffuse = glm::vec3(0.6f,0.2f,0.2f);
-    pointLight.specular = glm::vec3(0.1f,0.1f,0.1f);
+    pointLight.ambient = glm::vec3(0.1, 0.1, 0.1);
+    pointLight.diffuse = glm::vec3(0.6, 0.6, 0.6);
+    pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
 
     pointLight.constant = 1.0f;
-    pointLight.linear = 0.0f;
-    pointLight.quadratic = 0.0f;
+    pointLight.linear = 0.02f;
+    pointLight.quadratic = 0.032f;
 
     float skyboxVertices[] = {
             // aPos
@@ -333,10 +332,7 @@ int main() {
     hdrShader.setInt("hdrBuffer", 0);
     hdrShader.setInt("bloomBlur", 1);
 
-    // draw in wireframe
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-    // render loop
+    // loop
     // -----------
     while (!glfwWindowShouldClose(window)) {
         // per-frame time logic
@@ -362,14 +358,45 @@ int main() {
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        pointLight.position = glm::vec3(4.0 * cos(currentFrame), 4.0f, 4.0 * sin(currentFrame));
-//        ourShader.setVec3("pointLight.position", pointLight.position);
-        ourShader.setVec3("pointLight.ambient", pointLight.ambient);
-        ourShader.setVec3("pointLight.diffuse", pointLight.diffuse);
-        ourShader.setVec3("pointLight.specular", pointLight.specular);
-        ourShader.setFloat("pointLight.constant", pointLight.constant);
-        ourShader.setFloat("pointLight.linear", pointLight.linear);
-        ourShader.setFloat("pointLight.quadratic", pointLight.quadratic);
+        //Directional Lignt
+        ourShader.setVec3("dirLight.direction", -6.6f, -25.0f, -6.6f);
+        ourShader.setVec3("dirLight.ambient", 0.06, 0.06, 0.06);
+        ourShader.setVec3("dirLight.diffuse",  0.6f,0.2f,0.2);
+        ourShader.setVec3("dirLight.specular", 0.1, 0.1, 0.1);
+
+        // Pointlights
+        ourShader.setVec3("pointLight[0].position", glm::vec3(0.00f, 25, -40.00f));
+        ourShader.setVec3("pointLight[0].ambient", glm::vec3(0.02, 0.02, 0.02));
+        ourShader.setVec3("pointLight[0].diffuse", glm::vec3(0.02,0.02f,0.02f));
+        ourShader.setVec3("pointLight[0].specular", glm::vec3(0.22,0.22,0.22)); // moze malo, fazon 0.22
+        ourShader.setFloat("pointLight[0].constant", pointLight.constant);
+        ourShader.setFloat("pointLight[0].linear", pointLight.linear);
+        ourShader.setFloat("pointLight[0].quadratic", pointLight.quadratic);
+
+        ourShader.setVec3("pointLight[1].position", glm::vec3(30,30 + 2*sin(glfwGetTime()*2),-1));
+        ourShader.setVec3("pointLight[1].ambient", glm::vec3(0.003, 0.003, 0.003));
+        ourShader.setVec3("pointLight[1].diffuse", glm::vec3(1.55,1.55,1.56));
+        ourShader.setVec3("pointLight[1].specular", glm::vec3(1.12,1.12,1.12));
+        ourShader.setFloat("pointLight[1].constant", pointLight.constant);
+        ourShader.setFloat("pointLight[1].linear", pointLight.linear);
+        ourShader.setFloat("pointLight[1].quadratic", pointLight.quadratic);
+
+        ourShader.setVec3("pointLight[2].position", glm::vec3(-40, 25 ,-20));
+        ourShader.setVec3("pointLight[2].ambient", glm::vec3(0.04, 0.04, 0.04));
+        ourShader.setVec3("pointLight[2].diffuse", glm::vec3(0.2,0.2,0.2));
+        ourShader.setVec3("pointLight[2].specular", glm::vec3(0.22,0.22,0.22));
+        ourShader.setFloat("pointLight[2].constant", pointLight.constant);
+        ourShader.setFloat("pointLight[2].linear",  pointLight.linear);
+        ourShader.setFloat("pointLight[2].quadratic", pointLight.quadratic);
+
+        ourShader.setVec3("pointLight[3].position", glm::vec3(0.00f, 25, -40.00f));
+        ourShader.setVec3("pointLight[3].ambient", glm::vec3(0.04, 0.04, 0.04));
+        ourShader.setVec3("pointLight[3].diffuse", glm::vec3(0.2,0.2f,0.2f));
+        ourShader.setVec3("pointLight[3].specular", glm::vec3(0.22,0.22,0.22));
+        ourShader.setFloat("pointLight[3].constant", pointLight.constant);
+        ourShader.setFloat("pointLight[3].linear", pointLight.linear);
+        ourShader.setFloat("pointLight[3].quadratic", pointLight.quadratic);
+
         ourShader.setVec3("viewPosition", programState->camera.Position);
         ourShader.setFloat("material.shininess", 32.0f);
         // view/projection transformations
@@ -379,7 +406,6 @@ int main() {
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
 
-        // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.00f, 17.00f + 2*sin(glfwGetTime()), -40.00f));
         model = glm::scale(model, glm::vec3(0.02, 0.02, 0.02)); // it's a bit too big for our scene, so scale it down
@@ -516,11 +542,11 @@ void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         programState->camera.ProcessKeyboard(RIGHT, 4*deltaTime);
 
-    if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS && !hdrKeyPressed){
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !hdrKeyPressed){
         hdr = !hdr;
         hdrKeyPressed = true;
     }
-    if (glfwGetKey(window, GLFW_KEY_H) == GLFW_RELEASE){
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE){
         hdrKeyPressed = false;
     }
 
@@ -591,13 +617,6 @@ void DrawImGui(ProgramState *programState) {
         ImGui::ColorEdit3("Background color", (float *) &programState->clearColor);
         ImGui::DragFloat3("Backpack position", (float*)&programState->island1Position);
         ImGui::DragFloat("Backpack scale", &programState->island1Scale, 0.05, 0.1, 4.0);
-
-//        // OVO JA DODAJEM
-//        ImGui::DragFloat3("Backpack position", (float*)&programState->island2Position);
-//        ImGui::DragFloat("Backpack scale", &programState->island2Scale, 0.05, 0.1, 4.0);
-//        ImGui::DragFloat3("Backpack position", (float*)&programState->island3Position);
-//        ImGui::DragFloat("Backpack scale", &programState->island3Scale, 0.05, 0.1, 4.0);
-//        // DOVDE
 
         ImGui::DragFloat("pointLight.constant", &programState->pointLight.constant, 0.05, 0.0, 1.0);
         ImGui::DragFloat("pointLight.linear", &programState->pointLight.linear, 0.05, 0.0, 1.0);

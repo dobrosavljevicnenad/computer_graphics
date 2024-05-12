@@ -58,8 +58,13 @@ struct ProgramState {
     bool ImGuiEnabled = false;
     Camera camera;
     bool CameraMouseMovementUpdateEnabled = true;
-    glm::vec3 backpackPosition = glm::vec3(0.0f);
-    float backpackScale = 1.0f;
+    glm::vec3 island1Position = glm::vec3(1.0f);
+    glm::vec3 island2Position = glm::vec3(1.0f);
+    glm::vec3 island3Position = glm::vec3(1.0f);
+    float island1Scale = 1.0f;
+    float island2Scale = 1.0f;
+    float island3Scale= 1.0f;
+
     PointLight pointLight;
     ProgramState()
             : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {}
@@ -169,18 +174,23 @@ int main() {
 
     // load models
     // -----------
-    Model ourModel("resources/objects/backpack/backpack.obj");
-    ourModel.SetShaderTextureNamePrefix("material.");
+    Model island1("resources/objects/island/untitled.obj");
+    island1.SetShaderTextureNamePrefix("material.");
+    Model island2("resources/objects/island/untitled.obj");
+    island2.SetShaderTextureNamePrefix("material.");
+    Model island3("resources/objects/island/untitled.obj");
+    island2.SetShaderTextureNamePrefix("material.");
 
     PointLight& pointLight = programState->pointLight;
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
-    pointLight.ambient = glm::vec3(0.1, 0.1, 0.1);
-    pointLight.diffuse = glm::vec3(0.6, 0.6, 0.6);
-    pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
+    // bilo je svuda 0.1
+    pointLight.ambient = glm::vec3(0.6, 0.6, 0.6);
+    pointLight.diffuse = glm::vec3(0.6f,0.2f,0.2f);
+    pointLight.specular = glm::vec3(0.1f,0.1f,0.1f);
 
     pointLight.constant = 1.0f;
-    pointLight.linear = 0.09f;
-    pointLight.quadratic = 0.032f;
+    pointLight.linear = 0.03f;
+    pointLight.quadratic = 0.0f;
 
     float skyboxVertices[] = {
             // aPos
@@ -280,7 +290,7 @@ int main() {
         // don't forget to enable shader before setting uniforms
         ourShader.use();
         pointLight.position = glm::vec3(4.0 * cos(currentFrame), 4.0f, 4.0 * sin(currentFrame));
-        ourShader.setVec3("pointLight.position", pointLight.position);
+//        ourShader.setVec3("pointLight.position", pointLight.position);
         ourShader.setVec3("pointLight.ambient", pointLight.ambient);
         ourShader.setVec3("pointLight.diffuse", pointLight.diffuse);
         ourShader.setVec3("pointLight.specular", pointLight.specular);
@@ -298,11 +308,10 @@ int main() {
 
         // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model,
-                               programState->backpackPosition); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(programState->backpackScale));    // it's a bit too big for our scene, so scale it down
+        model = glm::translate(model, glm::vec3(0.00f, 17.00f + sin(glfwGetTime()), -50.00f));
+        model = glm::scale(model, glm::vec3(0.02, 0.02, 0.02)); // it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
-        ourModel.Draw(ourShader);
+        island1.Draw(ourShader);
 
         // skybox uvek na kraju
         glDepthFunc(GL_LEQUAL);
@@ -404,8 +413,15 @@ void DrawImGui(ProgramState *programState) {
         ImGui::Text("Hello text");
         ImGui::SliderFloat("Float slider", &f, 0.0, 1.0);
         ImGui::ColorEdit3("Background color", (float *) &programState->clearColor);
-        ImGui::DragFloat3("Backpack position", (float*)&programState->backpackPosition);
-        ImGui::DragFloat("Backpack scale", &programState->backpackScale, 0.05, 0.1, 4.0);
+        ImGui::DragFloat3("Backpack position", (float*)&programState->island1Position);
+        ImGui::DragFloat("Backpack scale", &programState->island1Scale, 0.05, 0.1, 4.0);
+
+//        // OVO JA DODAJEM
+//        ImGui::DragFloat3("Backpack position", (float*)&programState->island2Position);
+//        ImGui::DragFloat("Backpack scale", &programState->island2Scale, 0.05, 0.1, 4.0);
+//        ImGui::DragFloat3("Backpack position", (float*)&programState->island3Position);
+//        ImGui::DragFloat("Backpack scale", &programState->island3Scale, 0.05, 0.1, 4.0);
+//        // DOVDE
 
         ImGui::DragFloat("pointLight.constant", &programState->pointLight.constant, 0.05, 0.0, 1.0);
         ImGui::DragFloat("pointLight.linear", &programState->pointLight.linear, 0.05, 0.0, 1.0);

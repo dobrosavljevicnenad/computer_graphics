@@ -308,19 +308,19 @@ int main() {
 
         // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.00f, 17.00f + sin(glfwGetTime()), -50.00f));
+        model = glm::translate(model, glm::vec3(0.00f, 17.00f + 2*sin(glfwGetTime()), -40.00f));
         model = glm::scale(model, glm::vec3(0.02, 0.02, 0.02)); // it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
         island1.Draw(ourShader);
 
         model=glm::mat4(1.0f);
-        model=glm::translate(model, glm::vec3(40.0f, 17.00f + 1.2f*sin(glfwGetTime()), -0.00f));
+        model=glm::translate(model, glm::vec3(20.0f, 17.00f + 2*sin(glfwGetTime()), -0.00f));
         model=glm::scale(model, glm::vec3(0.02, 0.02, 0.02));
         ourShader.setMat4("model", model);
         island2.Draw(ourShader);
 
         model=glm::mat4(1.0f);
-        model=glm::translate(model, glm::vec3(-40.0f, 17.00f + 1.2f*sin(glfwGetTime()), -0.00f));
+        model=glm::translate(model, glm::vec3(-40.0f, 17.00f + 2*sin(glfwGetTime()), -20.00f));
         model=glm::scale(model, glm::vec3(0.02, 0.02, 0.02));
         ourShader.setMat4("model", model);
         island3.Draw(ourShader);

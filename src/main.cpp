@@ -125,8 +125,8 @@ int main()
 
     // glfw window creation
     GLFWwindow *window =
-	glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
-    if (window == NULL) {
+	glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", nullptr, nullptr);
+    if (window == nullptr) {
 	std::cout << "Failed to create GLFW window" << std::endl;
 	glfwTerminate();
 	return -1;
@@ -188,7 +188,7 @@ int main()
     for (unsigned int i = 0; i < 2; i++) {
 	glBindTexture(GL_TEXTURE_2D, colorBuffers[i]);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, SCR_WIDTH, SCR_HEIGHT, 0,
-		     GL_RGBA, GL_FLOAT, NULL);
+		     GL_RGBA, GL_FLOAT, nullptr);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -220,7 +220,7 @@ int main()
 	glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[i]);
 	glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[i]);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, SCR_WIDTH, SCR_HEIGHT, 0,
-		     GL_RGBA, GL_FLOAT, NULL);
+		     GL_RGBA, GL_FLOAT, nullptr);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(
@@ -281,7 +281,7 @@ int main()
 		 GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
-			  (void *)0);
+			  (void *)nullptr);
 
     vector<std::string> faces{
 	FileSystem::getPath("resources/textures/skybox/front.jpg"),
@@ -505,7 +505,7 @@ void renderQuad()
 		     GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
-			      (void *)0);
+			      (void *)nullptr);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
 			      (void *)(3 * sizeof(float)));
